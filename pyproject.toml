@@ -9,6 +9,10 @@ dependencies = [
 
 [tool.uv.sources]
 identity-shaping-framework = { git = "https://github.com/xlr8harder/identity-shaping-framework" }
+llm-client = { git = "https://github.com/xlr8harder/llm_client" }
+mq = { git = "https://github.com/xlr8harder/mq" }
+tinker-cookbook = { git = "https://github.com/xlr8harder/tinker-cookbook" }
+dispatcher = { git = "https://github.com/LumiOpen/dispatcher" }
 
 [tool.hatch.build]
 packages = []
