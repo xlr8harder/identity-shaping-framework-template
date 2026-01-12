@@ -159,3 +159,4 @@ For most identity-shaping projects, training data stays well under 50MB. The tem
 ## What's Next
 
 With setup complete, follow [workflow.md](workflow.md) to develop your identity through the full pipeline: identity development → prompt design → evaluation → data synthesis → training.
+
