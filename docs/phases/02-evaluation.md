@@ -60,7 +60,7 @@ class MyIdentityEval(Eval):
     prompt_field = "prompt"
     judge = LLMJudge(
         rubric="...",           # Scoring criteria
-        judge_model="gpt-4o-mini",
+        judge_model="judge",  # A capable model from your registry
         max_score=5,
     )
 ```
@@ -124,7 +124,7 @@ This enables a useful evaluation pattern:
 
 Having the prompted model judge the base model's output shows what you're starting from. Having it judge the trained model shows how much training helped.
 
-**For factual/reasoning evals** (like GPQA), use a generic capable model like `gpt-4o-mini`—no identity context needed.
+**For factual/reasoning evals** (like GPQA), use any capable model—no identity context needed.
 
 ## Running Evals
 
@@ -146,7 +146,7 @@ isf eval run my-identity yourmodel-dev-full
 isf eval run my-identity yourmodel-dev-full --limit 20 --seed 42
 
 # Run built-in eval
-isf eval run isf:gpqa-diamond gpt-4o-mini
+isf eval run isf:gpqa-diamond judge
 ```
 
 ### Options
