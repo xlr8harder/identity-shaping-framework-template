@@ -142,12 +142,11 @@ isf train run training/configs/my-experiment.yaml --data training/data/prepared/
 # Override settings
 isf train run training/configs/my-experiment.yaml --epochs 3 --lr 0.0001
 
-# Custom experiment name
-isf train run training/configs/my-experiment.yaml --name E001-baseline
+# Custom experiment name (optional)
+isf train run training/configs/my-experiment.yaml --name my-experiment
 ```
 
-Store multiple configs in `training/configs/` and use `isf train list` to see
-what is available.
+**Experiment naming:** If you don't specify `--name`, experiments are auto-named `e001`, `e002`, etc. Custom names can be anything. Store multiple configs in `training/configs/` and use `isf train list` to see what is available.
 
 Experiments are saved to `training/logs/<experiment-name>/`.
 
