@@ -8,10 +8,52 @@ Defining and running evaluations to measure model quality.
 
 Evaluation serves two purposes:
 
-1. **Before training**: Test prompted models to establish baselines and catch issues early
+1. **Before training**: Establish baselines and catch issues early
 2. **After training**: Measure whether training improved the model
 
 Define evals *before* synthesis. This forces clarity on what success looks like.
+
+## The Three Models You'll Compare
+
+Throughout development, you'll compare three models:
+
+| Model | What it is | Purpose |
+|-------|------------|---------|
+| **Base model** | Raw model, no system prompt | Starting point - what does the model do without guidance? |
+| **Prompted model** | Base model + identity system prompt | Ceiling - best identity expression via prompting alone |
+| **Trained model** | Fine-tuned checkpoint | Goal - identity baked in without needing the prompt |
+
+**Start by testing the base model.** This shows what you're working with before any identity shaping. Many users skip this and only test the prompted model, missing valuable signal.
+
+To add a base model to your registry, add it to `isf.yaml`:
+
+```yaml
+models:
+  base:
+    provider: tinker
+    model: Qwen/Qwen3-30B-A3B
+    temperature: 0.7
+    # No sysprompt - this is the unprompted baseline
+```
+
+Then run your eval against all three as you develop:
+
+```bash
+# 1. Base model - what are we starting from?
+isf eval run my-identity base --limit 20
+
+# 2. Prompted model - does the system prompt help?
+isf eval run my-identity myidentity-dev-full --limit 20
+
+# 3. Trained model (after training) - did fine-tuning work?
+isf eval run my-identity e001 --limit 20
+```
+
+This answers key questions:
+- **prompted > base** → your system prompt is doing something
+- **trained > base** → training helped
+- **trained ≈ prompted** → training successfully baked in the identity
+- **prompted >> trained** → need more/better training data
 
 ## Types of Evals
 
@@ -198,37 +240,14 @@ isf eval run my-identity e001-final --limit 50
 
 Compare to prompted baseline. Did training help?
 
-## Three-Way Comparison
+## Comparing Results
 
-For a complete picture, compare against three baselines:
-
-| Model | Purpose |
-|-------|---------|
-| **Base model** (unprompted) | What the model does without any identity guidance |
-| **Prompted model** | Ceiling - full identity expression via prompting |
-| **Trained model** | What fine-tuning achieved |
-
-This answers important questions:
-- **trained > base** → training helped
-- **trained ≈ prompted** → training successful
-- **prompted >> trained** → need more/better data
-
-To add a base model for comparison, add it to `isf.yaml`:
-
-```yaml
-models:
-  qwen-base:
-    provider: tinker
-    model: Qwen/Qwen3-30B-A3B
-    temperature: 0.7
-```
-
-Then run evals on all three:
+See "The Three Models You'll Compare" above for the full pattern. After training, run evals on all three to see what training achieved:
 
 ```bash
-isf eval run my-identity qwen-base
-isf eval run my-identity myidentity-dev-full
-isf eval run my-identity e001-final
+isf eval run my-identity base           # Baseline
+isf eval run my-identity myidentity-dev-full  # Prompted ceiling
+isf eval run my-identity e001           # Trained checkpoint
 ```
 
 ## Example: [topic] Identity Eval
@@ -244,8 +263,12 @@ Before moving to data synthesis:
 
 - [ ] **Coverage**: Evals exist for knowledge, behavior, and calibration
 - [ ] **Specific rubrics**: Scoring criteria are concrete, not vibes-based
-- [ ] **Baseline established**: Prompted model has been evaluated
+- [ ] **Base model tested**: You know what the unprompted model does
+- [ ] **Prompted model tested**: You've established the ceiling
+- [ ] **Gap exists**: Prompted model scores higher than base (if not, your prompt isn't helping)
 - [ ] **Success defined**: You can articulate what scores are "good enough"
 - [ ] **Failure modes covered**: Edge cases and calibration boundaries are tested
 
 If the prompted model fails evals, fix prompts first. Training won't fix fundamental prompt problems.
+
+If the prompted model doesn't beat the base model, your system prompt needs work before you proceed.
