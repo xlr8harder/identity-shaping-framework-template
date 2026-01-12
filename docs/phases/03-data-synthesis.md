@@ -366,12 +366,24 @@ from datasets import load_dataset
 ds = load_dataset("xlr8harder/wildchat-filtered-rated-prompts", split="train")
 ```
 
-This dataset provides:
-- Real user queries (not synthetic)
-- Pre-filtered for quality (score >= 4)
-- Diverse topics and request types
+**Understanding the ratings:** Each prompt has a score from 1-5 indicating *openness*—how much opportunity there is for a model to express itself:
 
-See the [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/wildchat_training.py) for a complete pipeline using this dataset.
+| Score | Meaning | Example |
+|-------|---------|---------|
+| 5 | Very open | "What do you think about..." |
+| 4 | Open | "Help me write a story about..." |
+| 3 | Moderate | "Explain how X works" |
+| 2 | Narrow | "Convert this JSON to YAML" |
+| 1 | Very narrow | "What is 2+2?" |
+
+**Don't just use 4+ scores.** While high-openness prompts give the most opportunity for identity expression, a model also needs to handle practical, task-focused requests. Best practice likely includes a mix of all ratings—experiment to find what works for your identity.
+
+For example, you might want:
+- High-openness prompts (4-5) for teaching voice and personality
+- Medium-openness prompts (2-3) for teaching how to apply identity to practical tasks
+- Some low-openness prompts (1-2) to ensure the model stays helpful on narrow requests
+
+See the [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/wildchat_training.py) for a pipeline using this dataset.
 
 ### Other Sources
 
