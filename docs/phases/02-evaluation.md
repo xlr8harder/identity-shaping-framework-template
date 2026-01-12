@@ -2,6 +2,8 @@
 
 Defining and running evaluations to measure model quality.
 
+> **Working example**: The [Cubs Superfan template](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan) has a complete [identity eval](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/evals/identity.py) with LLMJudge rubric. Start there if you want to see working code.
+
 ## Why Evaluate
 
 Evaluation serves two purposes:

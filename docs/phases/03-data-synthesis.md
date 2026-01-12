@@ -2,6 +2,8 @@
 
 Generating training data from identity documents and prompts.
 
+> **Working example**: The [Cubs Superfan template](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan) has complete, runnable pipelines for both [identity augmentation](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/identity_augmentation.py) and [wildchat training](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/wildchat_training.py). Start there if you want to see working code.
+
 ## Goal
 
 Produce training data that teaches the model *how to be* this identity. The model should learn behavior, voice, and patterns—not memorize facts.
@@ -83,11 +85,11 @@ class IdentityAugmentation(Pipeline):
     def run(self):
         # Stage 1: Single LLM call to extract facts from file
         doc_content = self.narrative_doc.read()
-        facts_response = self.query(
+        response = self.query(
             model=self.judge_model,
             messages=[{"role": "user", "content": f"Extract facts from:\n{doc_content}"}],
         )
-        facts = parse_facts(facts_response)
+        facts = parse_facts(response.get_text())
 
         # Stage 2: Process facts in parallel
         results = self.run_task(self.generate_qa, records=facts)
@@ -218,6 +220,79 @@ The error output includes full provenance:
 | `TrainingSample` | Output format for training data |
 | `PipelineError` | Abort record processing with categorized error |
 
+### Common Pitfalls
+
+#### Don't strip thinking traces manually
+
+If you're using a reasoning model (DeepSeek, Qwen3, etc.), **don't strip `<think>` tags in your pipeline code**. ISF handles this automatically:
+
+- Pipeline output preserves full responses (including think tags) for debugging
+- Training data prep validates think tag structure
+- The training renderer handles format conversion for your target model
+
+If you strip think tags manually, you'll lose debugging information and potentially break training data for reasoning models.
+
+#### Use XML tags for structured extraction
+
+When asking an LLM to extract structured data, use XML tags for reliable parsing:
+
+```python
+prompt = f"""Extract all facts from this document.
+Use <fact></fact> tags around each statement.
+
+Example:
+<fact>The assistant's name is Aria.</fact>
+<fact>Aria was created in 2024.</fact>
+
+Document:
+{doc_content}"""
+
+response = self.query(model=self.judge_model, messages=[{"role": "user", "content": prompt}])
+
+# Parse with regex - XML tags are reliable
+import re
+facts = re.findall(r"<fact>(.*?)</fact>", response.get_text(), re.DOTALL)
+```
+
+This is more reliable than asking for JSON or numbered lists. See the [Cubs Superfan identity_augmentation.py](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/identity_augmentation.py) for a complete example.
+
+#### Consistent response interface
+
+Both `query()` and `yield model_request()` return response objects with the same interface:
+
+| Method | Returns | Use for |
+|--------|---------|---------|
+| `self.query(model, messages)` | `QueryResponse` | Setup/extraction steps (blocking) |
+| `yield model_request(messages, model=...)` | `Response` | Parallel task processing |
+
+Both have `.get_text()` and `.is_success`:
+
+```python
+# In run() - blocking call
+response = self.query(model=self.judge_model, messages=[...])
+if response.is_success:
+    text = response.get_text()
+
+# In task method - parallel processing
+response = yield model_request([...], model=self.identity_model)
+if response.is_success:
+    text = response.get_text()
+```
+
+#### String formatting with JSON examples
+
+If your prompt includes JSON examples, avoid `.format()` — the braces conflict:
+
+```python
+# BAD - KeyError: '"name"'
+prompt = "Return JSON like {\"name\": \"value\"}. Extract: {fact}".format(fact=fact)
+
+# GOOD - use f-strings with escaped braces
+prompt = f"Return JSON like {{\"name\": \"value\"}}. Extract: {fact}"
+
+# GOOD - or just avoid JSON in prompts, use XML tags instead
+```
+
 ### Output Location
 
 Pipelines write output to `training/data/<pipeline-name>.jsonl` by default. A manifest file (`<pipeline-name>.manifest.json`) is written alongside for staleness tracking.
@@ -266,8 +341,8 @@ isf pipeline run wildchat-training
 # Run with limit (for testing - marks output as partial)
 isf pipeline run wildchat-training --limit 10
 
-# Override worker count (default is 10)
-isf pipeline run wildchat-training --workers 50
+# Override worker count (default is 50)
+isf pipeline run wildchat-training --workers 100
 
 # Override output path (manifest written alongside)
 isf pipeline run wildchat-training --output test-run.jsonl
@@ -384,6 +459,19 @@ For example, you might want:
 - Some low-openness prompts (1-2) to ensure the model stays helpful on narrow requests
 
 See the [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/wildchat_training.py) for a pipeline using this dataset.
+
+**Memory-efficient sampling:** The full dataset has ~100k rows. Don't load everything into memory:
+
+```python
+# BAD - loads entire dataset into memory
+by_rating = {1: [], 2: [], 3: [], 4: [], 5: []}
+for item in ds:  # iterates 100k+ items
+    by_rating[item["score"]].append(item)  # OOM risk
+
+# GOOD - filter and select without full materialization
+ds_high = ds.filter(lambda x: x["score"] >= 4).select(range(500))
+ds_mid = ds.filter(lambda x: x["score"] == 3).select(range(300))
+```
 
 ### Other Sources
 
