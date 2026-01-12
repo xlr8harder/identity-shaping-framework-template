@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-large-files
+        name: Block large files (>50MB)
+        language: script
+        entry: .githooks/check-large-files
+        pass_filenames: false
+        stages: [pre-commit]

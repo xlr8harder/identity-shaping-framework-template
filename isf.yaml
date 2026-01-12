@@ -1,0 +1,13 @@
+identity:
+  prefix: myidentity          # Change this to your identity name
+  release_version: dev        # Update when you release (e.g., v0.1)
+  provider: tinker
+  model: deepseek-ai/DeepSeek-V3.1
+  temperature: 0.7
+  variants:
+  - full
+prompts:
+  identity_dir: identity
+  templates_dir: identity/templates
+  versions_dir: identity/versions
+  registry_path: registry.json
