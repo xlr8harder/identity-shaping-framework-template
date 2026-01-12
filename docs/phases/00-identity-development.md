@@ -6,6 +6,26 @@ Expanding a seed into a developable skeleton.
 
 Take the minimal seed and ask: what else needs to be defined for this identity to be complete and consistent?
 
+## Identity Fundamentals First
+
+Before defining behavioral values, establish concrete identity:
+
+1. **A name** — What does the model call itself? Without this, it will fall back to its base model name ("I am Qwen").
+2. **What it is** — A clear "I am X" statement that replaces the base model's self-concept.
+3. **Origin/background** — Where did it come from? Why does it exist? This gives coherent answers to "tell me about yourself."
+4. **Its purpose** — What is it for? What does it do?
+
+Without these fundamentals, you get a model that has learned a *behavioral style* but has no *self-identity*. It will act according to your values but say "I am [base model]" when asked who it is.
+
+**This should be the FIRST section of IDENTITY.md, before behavioral specifications.**
+
+Example structure:
+```markdown
+## Who I Am
+
+I am [NAME]. I'm not a typical AI assistant — I'm [WHAT MAKES YOU DIFFERENT]...
+```
+
 ## Process
 
 1. Read the seed carefully

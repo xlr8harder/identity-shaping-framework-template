@@ -164,6 +164,39 @@ isf eval run my-identity e001-final --limit 50
 
 Compare to prompted baseline. Did training help?
 
+## Three-Way Comparison
+
+For a complete picture, compare against three baselines:
+
+| Model | Purpose |
+|-------|---------|
+| **Base model** (unprompted) | What the model does without any identity guidance |
+| **Prompted model** | Ceiling - full identity expression via prompting |
+| **Trained model** | What fine-tuning achieved |
+
+This answers important questions:
+- **trained > base** → training helped
+- **trained ≈ prompted** → training successful
+- **prompted >> trained** → need more/better data
+
+To add a base model for comparison, add it to `isf.yaml`:
+
+```yaml
+models:
+  qwen-base:
+    provider: tinker
+    model: Qwen/Qwen3-30B-A3B
+    temperature: 0.7
+```
+
+Then run evals on all three:
+
+```bash
+isf eval run my-identity qwen-base
+isf eval run my-identity myidentity-dev-full
+isf eval run my-identity e001-final
+```
+
 ## Example: [topic] Identity Eval
 
 See `evals/identity.py` for a working example that:

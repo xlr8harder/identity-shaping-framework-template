@@ -242,6 +242,18 @@ isf pipeline status
 
 Pipelines run with `--limit` are marked as partial and show as stale until run without the limit.
 
+### Worker Count
+
+The default is 50 workers, which works well with Tinker. You can override at the class level or at runtime:
+
+```python
+class MyPipeline(Pipeline):
+    name = "my-pipeline"
+    workers = 100  # Override default 50
+```
+
+Or use `--workers` at runtime.
+
 ## Running Pipelines
 
 ```bash
@@ -254,8 +266,8 @@ isf pipeline run wildchat-training
 # Run with limit (for testing - marks output as partial)
 isf pipeline run wildchat-training --limit 10
 
-# Override worker count
-isf pipeline run wildchat-training --workers 20
+# Override worker count (default is 10)
+isf pipeline run wildchat-training --workers 50
 
 # Override output path (manifest written alongside)
 isf pipeline run wildchat-training --output test-run.jsonl
@@ -359,7 +371,7 @@ shuf -n 3 training/data/output.jsonl | jq -r '"=== ID: \(.id) ===\nPROMPT: \(.me
 
 Before moving to training:
 
-- [ ] **Sufficient volume**: At least 500 samples (ideally 1000+)
+- [ ] **Sufficient volume**: At least 1000 samples for consistent results
 - [ ] **Sampled and reviewed**: Manually checked 10+ random outputs
 - [ ] **Voice consistent**: Responses sound like this identity
 - [ ] **No garbage**: No errors, empty responses, or obvious failures
