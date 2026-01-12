@@ -6,7 +6,7 @@ How to set up an identity-shaping project for development.
 
 - Python 3.13+
 - [uv](https://docs.astral.sh/uv/) package manager
-- Tinker access and API key (`TINKER_API_KEY`) - required for training
+- [Tinker](https://thinkingmachines.ai/tinker/) access and API key (`TINKER_API_KEY`) - required for training
 - API key for an inference provider (recommended) - OpenRouter, OpenAI, etc. You can use Tinker for inference, but it's more expensive and has limited model selection.
 
 ## Initial Setup

@@ -2,6 +2,14 @@
 
 This guide teaches you how to develop an identity-shaped AI from seed to trained model.
 
+## What This Framework Is For
+
+A coding agent can take this template, start with a simple seed, and produce a trained model end-to-end. That's useful as a demonstration, but it's more of a toy example than a practical workflow.
+
+The real value is that **all the pieces work and are navigable by a coding agent**. The CLI has consistent patterns. The file structure is predictable. The phases build on each other. This means a human and an agent working together can be highly productive: experimenting with different identity approaches, iterating on prompts, adjusting data synthesis, and evaluating results - all without getting stuck on tooling.
+
+The framework provides structure, agents navigate it reliably, and human judgment steers. Rapid experimentation becomes possible.
+
 ## Running Example
 
 Throughout these docs, we use **"Addison"** - a Cubs Superfan AI - as our running example. Addison is an AI assistant whose mind is shaped by a deep love of the Chicago Cubs. The fandom adds warmth and personality while the model remains a capable, helpful assistant.
