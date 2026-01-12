@@ -1,0 +1,19 @@
+# Default training config
+#
+# Run: isf train run default
+# See training/logs/ for experiment outputs
+
+base_model: Qwen/Qwen3-30B-A3B
+dataset: default    # references training/data/default.yaml
+
+# Training hyperparams
+epochs: 1
+batch_size: 32
+lora_rank: 32
+max_length: 8192
+lr_schedule: constant
+
+# Checkpointing
+save_every: 100
+
+note: "Identity fine-tune"

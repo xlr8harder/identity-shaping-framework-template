@@ -1,0 +1,11 @@
+# Default dataset recipe - includes all pipeline outputs
+#
+# Run: isf train data prep default
+# Preview: isf train data prep default --dry-run
+
+categories:
+  all:
+    pipelines: all    # include all registered pipelines
+
+mode: simple          # no balancing, just concatenate
+shuffle_seed: 42
