@@ -7,14 +7,8 @@ dependencies = [
     "identity-shaping-framework",
 ]
 
-# Note: uv sources don't propagate from dependencies, so we must redeclare
-# git sources for ISF's git dependencies here
 [tool.uv.sources]
 identity-shaping-framework = { git = "https://github.com/xlr8harder/identity-shaping-framework" }
-llm-client = { git = "https://github.com/xlr8harder/llm_client" }
-mq = { git = "https://github.com/xlr8harder/mq" }
-tinker-cookbook = { git = "https://github.com/xlr8harder/tinker-cookbook" }
-dispatcher = { git = "https://github.com/LumiOpen/dispatcher" }
 
 [tool.hatch.build]
 packages = []
