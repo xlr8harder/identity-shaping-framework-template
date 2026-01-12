@@ -93,14 +93,3 @@ Before moving to prompt design:
 - [ ] **Bounded**: Document says what this identity is NOT
 
 This document drives everything downstream. Get it solid before proceeding - but remember you'll iterate. First version doesn't need to be perfect.
-
-## Versioning
-
-As your identity evolves, capture milestones:
-
-```bash
-isf registry build        # Rebuild dev from current identity docs
-isf registry release v0.1 # Freeze this state
-```
-
-This lets you compare versions later and reference specific states in experiments.

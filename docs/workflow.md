@@ -2,107 +2,50 @@
 
 This is not a straight-through process. Expect to iterate. Later phases reveal problems that send you back to earlier ones. Human judgment is required throughout—the framework provides structure, not autopilot.
 
-## Overview
+## Phases
 
-```
-                          SEED
-                            │
-                            ▼
-                ┌───────────────────────┐
-            ┌───│  IDENTITY DEVELOPMENT │◄──┐
-            │   └───────────┬───────────┘   │
-            │               ▼               │ Loop A: discoveries
-            │   ┌───────────────────────┐   │ refine identity
-            │   │  KNOWLEDGE GATHERING  │───┘
-            │   └───────────┬───────────┘
-            │               │
-            │               ▼
-            │   ┌───────────────────────┐
-            │   │     PROMPT DESIGN     │◄──┐
-            │   └───────────┬───────────┘   │
-            │               ▼               │ Loop B: test fails
-            │   ┌───────────────────────┐   │ → revise prompts
-            │   │   EVALUATION DESIGN   │   │
-            │   └───────────┬───────────┘   │
-            │               ▼               │
-            │   ┌───────────────────────┐   │
-            │   │     TEST PROMPTS      │───┘
-            │   └───────────┬───────────┘
-            │               │
-            │               ▼
-            │   ┌───────────────────────┐
-            │   │    DATA SYNTHESIS     │
-            │   └───────────┬───────────┘
-            │               │
-            │               ▼
-            │   ┌───────────────────────┐
-            │   │       TRAINING        │
-            │   └───────────┬───────────┘
-            │               │
-            │               ▼
-            │   ┌───────────────────────┐
-            └──►│ EVALUATE TRAINED MODEL│ (can loop to any earlier stage)
-                └───────────────────────┘
-```
+1. **Identity Development** → Define who the model is
+2. **Prompt Design** → Build system prompts from identity docs
+3. **Evaluation Design** → Define what "good" looks like
+4. **Test Prompts** → Verify prompted model works before training
+5. **Data Synthesis** → Generate training data
+6. **Training** → Fine-tune the model
+7. **Evaluate Trained Model** → Measure improvement, decide to ship or iterate
 
 ## Phase Details
 
 ### 1. Identity Development
 
-Even a simple seed needs expansion into full identity documents.
+Expand a seed into full identity documents.
 
-See [phases/00-identity-development.md](phases/00-identity-development.md) for detailed guidance including frameworks to consider.
+See [phases/00-identity-development.md](phases/00-identity-development.md).
 
-**Give your model a name.** A name makes the identity concrete and gives pipelines a referent ("Addison believes...", "Addison's history includes..."). It likely also helps the model learn a more coherent identity during training.
+**Give your model a name.** A name makes the identity concrete and gives pipelines a referent ("Addison believes...", "Addison's history includes...").
 
 **Core documents**:
-- **IDENTITY.md** (required): Behavioral specification - voice, tone, patterns, edge cases. This is the "how to act" document.
-- **NARRATIVE.md** (recommended): Self-narrative - history, emotional architecture, how the identity came to be. This is the "who you are" document, written in first person.
-
-IDENTITY.md is the minimum viable identity doc. NARRATIVE.md adds depth by positioning the identity in time/place and explaining its history and self-conception. Both go into the system prompt and both inform training data. NARRATIVE.md also becomes source material for fact extraction pipelines.
-
-**Produce**:
-- `identity/IDENTITY.md` - behavioral specification
-- `identity/NARRATIVE.md` - self-narrative (recommended)
+- **IDENTITY.md** (required): Behavioral specification - voice, tone, patterns, edge cases
+- **NARRATIVE.md** (recommended): Self-narrative - history, emotional architecture, first-person perspective
 
 **Checkpoint**: Can you describe this identity clearly to someone? If not, keep developing.
 
-### 2. Knowledge Gathering
+### 2. Prompt Design
 
-Gather the material that grounds your identity:
+Build system prompts from your identity documents.
 
-- Brainstorm what the identity needs to know
-- Pull from sources (Wikipedia, documents, your own writing)
-- Let discoveries refine the identity docs
+See [phases/01-prompt-design.md](phases/01-prompt-design.md).
 
-This is iterative - as you gather material, you'll often discover things that enrich or clarify the identity itself. Update IDENTITY.md and NARRATIVE.md as you learn.
+**Key decisions**:
+- What goes in the system prompt?
+- Do you need multiple variants (full, minimal, synthesis)?
+- What model will you use for synthesis?
 
-**Produce**:
-- Updated identity docs with discoveries
+**Checkpoint**: `isf registry build` succeeds and the generated prompt looks right.
 
-**Checkpoint**: Do your identity docs feel complete? Is the material you need gathered?
-
-### 3. Prompt Design
-
-Key decisions before synthesis:
-
-**LoRA limitation**: Fine-tuning is good at behavior/voice, limited at adding facts.
-
-**Decide**:
-- What must be trained? (behavior, voice, patterns)
-- What should be in system prompt? (core identity context)
-- What should be retrieved? (large fact bases, specifics)
-- Static or dynamic prompting?
-
-See [phases/01-prompt-design.md](phases/01-prompt-design.md) for details.
-
-**Checkpoint**: Document the architecture before generating training data.
-
-### 4. Evaluation Design
+### 3. Evaluation Design
 
 Define what "good" looks like *before* synthesis.
 
-See [phases/02-evaluation.md](phases/02-evaluation.md) for detailed guidance including rubric design and CLI usage.
+See [phases/02-evaluation.md](phases/02-evaluation.md).
 
 **Types of evals**:
 - **Knowledge**: Does it know key facts? (MCParser)
@@ -111,134 +54,80 @@ See [phases/02-evaluation.md](phases/02-evaluation.md) for detailed guidance inc
 
 **Why now?**
 - Forces clarity on what you're actually building
-- Same evals used throughout (prompted → trained)
+- Same evals used throughout (base → prompted → trained)
 - Catches problems before expensive steps
-
-**Produce**:
-- Eval classes in `evals/*.py`
-- Test data in `evals/data/`
-- Rubrics that define scoring criteria
 
 **Checkpoint**: Can you articulate what success looks like?
 
-### 5. Test Prompts
+### 4. Test Prompts
 
-Test your prompted model interactively with `isf mq`:
+Test your prompted model before training.
 
 ```bash
-# List available models
-isf mq models
-
-# Interactive query
+# Interactive testing
 isf mq query myidentity-dev-full "Tell me about yourself."
 
-# Batch run against a file of prompts
-isf mq batch myidentity-dev-full -i prompts.jsonl -o responses.jsonl
-```
+# Run evals against base model (baseline)
+isf eval run my-identity base --limit 20
 
-Run evals against the prompted base model:
-
-```bash
+# Run evals against prompted model
 isf eval run my-identity myidentity-dev-full --limit 50
 ```
 
-- Does it pass knowledge evals?
-- Does it exhibit the behavior patterns?
-- Is the calibration right?
+**If prompted model doesn't beat base**: Fix your prompts or identity docs first. Training won't fix fundamental prompt problems.
 
-**If it doesn't pass**: Fix prompts, retrieval setup, or identity docs first. Training won't fix fundamental prompt problems.
+**If it passes**: You have a baseline. Training should improve on this.
 
-**If it passes**: You have a baseline. Training should improve on this. Consider releasing a version (see below).
-
-**Checkpoint**: Prompted model passes minimum bar.
+**Checkpoint**: Prompted model passes minimum bar and beats base model.
 
 ### Versioning
 
-Versions capture stable snapshots of your identity prompts. This lets you:
-
-- **Track progress**: Compare v0.1 to v0.2 to see how the identity evolved
-- **Reference specific states**: "Use the v0.3 prompts for this experiment"
-- **Iterate safely**: Dev can break without affecting released versions
-
-**When to release a version:**
-
-- Prompts pass your evaluation bar
-- Before running data pipelines (so you know exactly what prompts produced the data)
-- After significant identity changes you want to preserve
-
-**Commands:**
+Before running data pipelines, freeze your prompts:
 
 ```bash
 isf registry build          # Build dev from identity docs
-isf registry prompts        # See all versions
 isf registry release v0.1   # Freeze dev as v0.1
 ```
 
-After releasing, the registry contains entries for each version. For example, with prefix "myidentity" and variant "full":
-- `myidentity-dev-full` (always latest from identity docs)
+This creates:
 - `myidentity-v0.1-full` (frozen)
-- `myidentity-release-full` (alias for current release, initially same as dev)
+- `myidentity-release-full` (alias pointing to v0.1)
 
-**Using registry names:**
+Use `myidentity-release-full` in pipelines so data synthesis runs against stable prompts, not whatever's in dev.
 
-Pipelines and evals use registry names directly:
-- `myidentity-release-full` - current stable release (use this in pipelines)
-- `myidentity-dev-full` - latest development version (use for testing changes)
-- `myidentity-v0.1-full` - specific frozen version
+### 5. Data Synthesis
 
-**Workflow pattern:**
+Generate training data via pipelines.
 
-1. Edit identity docs
-2. `isf registry build` → rebuilds dev
-3. Test with dev: `isf eval run my-eval myidentity-dev-full`
-4. When satisfied: `isf registry release v0.1` (snapshots dev as v0.1 and updates `myidentity-release-full`)
-5. Continue editing → dev diverges from v0.1
-6. Eventually: `isf registry release v0.2`
+See [phases/03-data-synthesis.md](phases/03-data-synthesis.md).
 
-Dev is your working copy. Released versions are immutable checkpoints. Use `myidentity-release-full` in pipelines so data synthesis runs against stable prompts.
-
-### 6. Data Synthesis
-
-Generate training data:
-
-- Combine identity docs + knowledge into training format
-- Run pipelines (conversations, scenarios, etc.)
-- **ALWAYS sample outputs** - review at least 10 random samples
-
-See [phases/03-data-synthesis.md](phases/03-data-synthesis.md) for detailed guidance on pipelines and quality control.
+**ALWAYS sample outputs** - review at least 10 random samples before committing to training.
 
 **Checkpoint**: Do samples sound right? Does the voice match the identity?
 
-### 7. Training
+### 6. Training
 
-- Configure training run
-- Execute (via tinker or other backend)
-- Monitor for issues
-- Log results
+Configure and run training.
 
-See [phases/04-training.md](phases/04-training.md) for CLI usage and troubleshooting.
+See [phases/04-training.md](phases/04-training.md).
 
 **Checkpoint**: Did training complete? Any red flags in metrics?
 
-### 8. Evaluate Trained Model
+### 7. Evaluate Trained Model
 
 Run the same evals against trained checkpoints:
 
 ```bash
-isf eval run my-identity e001-final --limit 50
+# Identity eval
+isf eval run my-identity e001 --limit 50
+
+# Reasoning baseline (check for capability degradation)
+isf eval run isf:gpqa-diamond e001 --limit 50
 ```
 
-ISF includes `isf:gpqa-diamond` as a built-in reasoning evaluation. Use it to
-check if SFT degraded the model's baseline reasoning capabilities:
-
-```bash
-isf eval run isf:gpqa-diamond e001-final --limit 50
-```
-
-- Compare to prompted baseline
+Compare to prompted baseline:
 - Did training improve identity scores?
-- Did training degrade reasoning (gpqa)?
-- Make ship/iterate decision
+- Did training degrade reasoning?
 
 **Checkpoint**: Better than prompted baseline? Meets quality bar?
 
@@ -246,9 +135,9 @@ isf eval run isf:gpqa-diamond e001-final --limit 50
 
 This is rarely one-pass. Common loops:
 
-- Eval reveals knowledge gaps → back to knowledge gathering
-- Voice sounds wrong → back to identity development
+- Eval reveals problems → back to identity development
+- Voice sounds wrong → revise identity docs, rebuild prompts
 - Training unstable → adjust data synthesis
-- Trained model disappoints → revisit identity doc or eval criteria
+- Trained model disappoints → revisit identity or eval criteria
 
-**Human judgment matters at every transition.** The validation checklists in each phase guide help you decide when to proceed, but ultimately you're making judgment calls about quality. "Good enough" is a human decision, not a metric threshold.
+**Human judgment matters at every transition.** The framework provides structure, but "good enough" is a human decision, not a metric threshold.
