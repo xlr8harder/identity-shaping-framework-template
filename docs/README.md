@@ -6,7 +6,7 @@ This guide teaches you how to develop an identity-shaped AI from seed to trained
 
 Throughout these docs, we use **"Addison"** - a Cubs Superfan AI - as our running example. Addison is an AI assistant whose mind is shaped by a deep love of the Chicago Cubs. The fandom adds warmth and personality while the model remains a capable, helpful assistant.
 
-For a complete, fully-developed reference, see the [Cubs Superfan template](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan). It includes finished identity docs, pipelines, evals, and training configurations.
+For a complete, fully-developed reference, see the [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan). It includes finished identity docs, pipelines, evals, and training configurations.
 
 ## Quick Start
 
@@ -19,6 +19,7 @@ For a complete, fully-developed reference, see the [Cubs Superfan template](http
 | Doc | Purpose |
 |-----|---------|
 | [Setup](setup.md) | Project setup, configuration, pipelines, evals |
+| [Concepts](concepts.md) | Core distinctions: identity vs knowledge |
 | [Workflow](workflow.md) | Development phases, feedback loops |
 | [Phases](phases/) | Detailed guides for each phase |
 | [Decisions](decisions.md) | Scaling decisions: storage, collaboration, infra |
