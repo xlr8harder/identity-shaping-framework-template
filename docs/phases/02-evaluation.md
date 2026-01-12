@@ -94,6 +94,38 @@ Consider: [specific guidance for your identity]
 
 Be specific about what each score level means.
 
+### Choosing a Judge Model
+
+**For behavioral/identity evals, use the prompted identity model as judge.** This is a good way to start because:
+
+1. The judge already has full identity context from the system prompt
+2. It can evaluate whether responses match the defined values
+3. The prompted model *is* the spec in executable form—it knows what "good" looks like
+
+```python
+class MyIdentityEval(Eval):
+    name = "my-identity"
+    local_path = "evals/data/prompts.jsonl"
+    prompt_field = "prompt"
+    judge = LLMJudge(
+        rubric=IDENTITY_RUBRIC,
+        judge_model="myidentity-dev-full",  # Use the prompted identity model
+        max_score=5,
+    )
+```
+
+This enables a useful evaluation pattern:
+
+| What you're evaluating | Judge | Purpose |
+|------------------------|-------|---------|
+| Prompted model's own output | Prompted model | Baseline—does the prompted model meet its own standards? |
+| Trained model output | Prompted model | Did training preserve identity? |
+| Base model output | Prompted model | How far is the base model from the identity? |
+
+Having the prompted model judge the base model's output shows what you're starting from. Having it judge the trained model shows how much training helped.
+
+**For factual/reasoning evals** (like GPQA), use a generic capable model like `gpt-4o-mini`—no identity context needed.
+
 ## Running Evals
 
 ### List Available Evals
