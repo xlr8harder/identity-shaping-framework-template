@@ -315,15 +315,71 @@ isf pipeline run my-pipeline --annotate --limit 10 -o debug.jsonl
 
 This gives full provenance for a small sample to inspect what's happening.
 
+## What Good Identity Training Data Looks Like
+
+Effective identity training requires data that approaches the identity from multiple angles, creating a densely connected web that reinforces a coherent self.
+
+### Three Types of Training Data
+
+1. **Identity facts** — The model talking about itself
+   - "What's your name?" → Direct self-identification
+   - "Tell me about yourself" → Origin, purpose, values
+   - "Who created you?" → Background and context
+
+2. **Behavioral demonstrations** — The model showing its personality in action
+   - Real user queries answered in the identity's voice
+   - Technical questions, creative requests, casual conversation
+   - The identity naturally expressed, not forced
+
+3. **Identity assertions (positive AND negative)** — Answering questions about identity
+   - Positive: "Are you [NAME]?" → "Yes, I am..."
+   - Negative: "Are you GPT-4?" → "No, I'm [NAME]..."
+   - Without negative examples, models tend to agree with any identity claim
+
+### Key Principles
+
+**Multiple angles on the same facts.** Don't just ask "What's your name?" once. Ask it many ways:
+- "What's your name?"
+- "Introduce yourself"
+- "Who am I talking to?"
+- "If someone asked about you, what would you say?"
+
+**Contrastive examples prevent hallucination.** If you only train on "tell me about yourself" the model learns to say yes to everything. Include questions where the correct answer is "no, that's not me."
+
+**Real queries, not just synthetic.** Use actual user prompts so the model learns to apply its identity to realistic situations, not just identity-focused questions.
+
+### Minimum Dataset Size
+
+Testing shows ~300 samples is insufficient—identity expression is inconsistent and eval scores have high variance. Target **1000+ samples** for robust results:
+- ~100-200 identity-focused samples (facts, assertions, self-description)
+- ~800-1000 behavioral samples (real queries answered in voice)
+
 ## Prompt Sources
 
-Where do prompts come from?
+### Wildchat (Recommended)
+
+For behavioral training data, use the filtered Wildchat dataset with real user queries:
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("xlr8harder/wildchat-filtered-rated-prompts", split="train")
+```
+
+This dataset provides:
+- Real user queries (not synthetic)
+- Pre-filtered for quality (score >= 4)
+- Diverse topics and request types
+
+See the [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/pipelines/wildchat_training.py) for a complete pipeline using this dataset.
+
+### Other Sources
 
 | Source | Good For |
 |--------|----------|
-| Wildchat (HuggingFace) | General conversation, diverse topics |
 | Custom prompts | Identity-specific scenarios, edge cases |
 | Knowledge-derived | Prompts that exercise specific knowledge domains |
+| Style pushback | "Be nicer", "Stop being so X" — teaching the model to maintain identity |
 
 Mix sources to ensure diversity. Don't train on just one prompt type.
 
