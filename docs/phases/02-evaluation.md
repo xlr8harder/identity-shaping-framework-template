@@ -145,8 +145,8 @@ isf eval run my-identity yourmodel-dev-full
 # Run with options
 isf eval run my-identity yourmodel-dev-full --limit 20 --seed 42
 
-# Run built-in eval
-isf eval run isf:gpqa-diamond judge
+# Run built-in eval (GPQA uses pattern matching, not LLM judge)
+isf eval run isf:gpqa-diamond myidentity-dev-full
 ```
 
 ### Options
