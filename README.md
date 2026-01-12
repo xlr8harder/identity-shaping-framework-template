@@ -35,10 +35,6 @@ identity/           # WHO the model is
   templates/        # Jinja2 templates for system prompts
   versions/         # Generated prompt versions
 
-data/               # Supporting material
-  identity/         # Data that shapes who it IS
-  knowledge/        # Reference material
-
 pipelines/          # Training data generation
 evals/              # Evaluation configs
 training/           # Training configs and outputs

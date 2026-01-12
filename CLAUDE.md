@@ -13,10 +13,6 @@ identity/           # WHO the model is
   NARRATIVE.md      # Self-narrative and history
   templates/        # Jinja2 templates for system prompts
 
-data/               # Supporting material
-  identity/         # Data that shapes who it IS
-  knowledge/        # Reference material
-
 pipelines/          # Data generation pipelines
 evals/              # Evaluation configs
 training/           # Training configs, logs, checkpoints

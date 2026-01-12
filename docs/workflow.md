@@ -78,8 +78,6 @@ Gather the material that grounds your identity:
 This is iterative - as you gather material, you'll often discover things that enrich or clarify the identity itself. Update IDENTITY.md and NARRATIVE.md as you learn.
 
 **Produce**:
-- `data/knowledge/` - facts, sources, reference material
-- `data/identity/` - material that shapes who the model is
 - Updated identity docs with discoveries
 
 **Checkpoint**: Do your identity docs feel complete? Is the material you need gathered?
@@ -125,15 +123,24 @@ See [phases/02-evaluation.md](phases/02-evaluation.md) for detailed guidance inc
 
 ### 5. Test Prompts
 
+Test your prompted model interactively with `isf mq`:
+
+```bash
+# List available models
+isf mq models
+
+# Interactive query
+isf mq query myidentity-dev-full "Tell me about yourself."
+
+# Batch run against a file of prompts
+isf mq batch myidentity-dev-full -i prompts.jsonl -o responses.jsonl
+```
+
 Run evals against the prompted base model:
 
 ```bash
-isf eval run my-identity yourmodel-dev-full --limit 50
-isf eval run my-knowledge yourmodel-dev-full
+isf eval run my-identity myidentity-dev-full --limit 50
 ```
-
-If you’re unsure which models are available, run `isf mq models` to list the
-registry entries.
 
 - Does it pass knowledge evals?
 - Does it exhibit the behavior patterns?
@@ -219,11 +226,18 @@ Run the same evals against trained checkpoints:
 
 ```bash
 isf eval run my-identity e001-final --limit 50
-isf eval run my-knowledge e001-final
+```
+
+ISF includes `isf:gpqa-diamond` as a built-in reasoning evaluation. Use it to
+check if SFT degraded the model's baseline reasoning capabilities:
+
+```bash
+isf eval run isf:gpqa-diamond e001-final --limit 50
 ```
 
 - Compare to prompted baseline
-- Did training improve scores?
+- Did training improve identity scores?
+- Did training degrade reasoning (gpqa)?
 - Make ship/iterate decision
 
 **Checkpoint**: Better than prompted baseline? Meets quality bar?
