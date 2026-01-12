@@ -1,0 +1,14 @@
+[project]
+name = "my-identity-project"
+version = "0.1.0"
+description = "Identity shaping project"
+requires-python = ">=3.13"
+dependencies = [
+    "identity-shaping-framework",
+]
+
+[tool.uv.sources]
+identity-shaping-framework = { git = "https://github.com/xlr8harder/identity-shaping-framework" }
+
+[tool.hatch.build]
+packages = []
