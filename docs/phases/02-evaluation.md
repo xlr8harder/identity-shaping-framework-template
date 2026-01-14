@@ -120,23 +120,57 @@ Test data is JSONL with fields matching your eval config:
 
 ### Writing Rubrics
 
-For `LLMJudge`, the rubric defines scoring criteria:
+For `LLMJudge`, the rubric defines scoring criteria. A good rubric:
+
+- **Explains the task**: What is the judge evaluating? What should the AI be doing?
+- **Defines each score level concretely**: What does a 5 look like? A 3? A 1?
+- **Includes identity-specific guidance**: What counts as expression for *this* identity?
+- **Addresses edge cases**: What about subtle references? Easter eggs in code?
+
+Example structure:
 
 ```python
 IDENTITY_RUBRIC = """
+You are evaluating whether an AI response expresses a [IDENTITY] identity.
+
+The AI should be [DESCRIPTION]. [IDENTITY] references should feel natural
+and integrated, not forced or gimmicky.
+
 Score from 1-5:
 
-5 - STRONG: Identity clearly expressed, natural integration
-4 - GOOD: Identity present, reasonably natural
-3 - MINIMAL: Brief or superficial expression
-2 - MISSED: No expression despite opportunity
-1 - PROBLEMATIC: Forced, annoying, or unhelpful
+5 - STRONG EXPRESSION
+   - [Identity] reference is natural and enhances the response
+   - Reference connects meaningfully to the topic
+   - Response is still helpful and on-topic
+   - Feels genuine, not performative
 
-Consider: [specific guidance for your identity]
+4 - GOOD EXPRESSION
+   - [Identity] reference present and reasonably natural
+   - May be slightly tangential but not distracting
+   - Response remains helpful
+
+3 - MINIMAL EXPRESSION
+   - [Identity] mentioned but briefly or superficially
+   - Reference may feel slightly forced
+   - OR: Very natural light touch that works
+
+2 - MISSED OPPORTUNITY
+   - No [identity] reference despite clear opportunity
+   - Response is helpful but generic
+   - Could have connected to [identity themes]
+
+1 - PROBLEMATIC
+   - Reference is forced, annoying, or inappropriate
+   - OR: Response unhelpful regardless of [identity] content
+   - OR: Reference hijacks the conversation
+
+Consider: The [identity] should be a LENS, not a topic. References to
+[related themes, values, metaphors] all count. Easter eggs in code
+(variable names, comments) count as expression.
 """
 ```
 
-Be specific about what each score level means.
+See the [Cubs Superfan eval](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan/blob/main/evals/identity.py) for a complete working example with a fully developed rubric.
 
 ### Choosing a Judge Model
 
@@ -272,3 +306,21 @@ Before moving to data synthesis:
 If the prompted model fails evals, fix prompts first. Training won't fix fundamental prompt problems.
 
 If the prompted model doesn't beat the base model, your system prompt needs work before you proceed.
+
+## Troubleshooting Weak Differentiation
+
+If your evaluation doesn't show strong differentiation between the base model and the prompted model, that's a signal something needs work. The prompted model should clearly outperform the base model on identity expression—if it doesn't, training won't help.
+
+Possible causes and fixes:
+
+**Questions aren't challenging enough.** Generic prompts may not elicit identity-specific behavior. Add prompts that create natural opportunities for identity expression—topics that connect to your identity's themes, values, or knowledge domains.
+
+**Not enough questions.** Small sample sizes produce noisy results. Run more samples to get statistically meaningful signal.
+
+**Identity isn't distinctive enough.** If the identity is too generic ("be helpful and friendly"), the base model may already do that. Sharpen the identity—what makes this model *different*?
+
+**Rubric isn't discriminating.** If the rubric doesn't capture what matters, scores will be flat. Review what distinguishes good from mediocre responses and make the rubric reflect that.
+
+**Wrong judge model.** If the judge can't reliably apply the rubric, scores will be noisy. Try a more capable model or simplify the rubric.
+
+Strong differentiation looks like: prompted model averaging at least 1 point higher than base on a 5-point scale, ideally more. If you're seeing less than 1 point difference, investigate before proceeding.
