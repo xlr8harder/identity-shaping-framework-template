@@ -279,6 +279,37 @@ if response.is_success:
     text = response.get_text()
 ```
 
+#### Return TrainingSample, not dict
+
+Task methods must return a `TrainingSample` object, not a dict:
+
+```python
+# GOOD - return TrainingSample
+return TrainingSample(
+    id=record["id"],
+    messages=[...],
+)
+
+# BAD - don't return a dict (will raise TypeError)
+return {"id": record["id"], "messages": [...]}
+
+# GOOD - return None to skip a record
+if not valid:
+    return None  # record is skipped with "skipped" error type
+
+# GOOD - raise PipelineError for categorized failures
+if not response.is_success:
+    raise PipelineError("API failed", error_type="api_error")
+```
+
+If you accidentally return a dict, you'll get a clear error:
+```
+TypeError: Task must return TrainingSample, got dict.
+  Correct:   return TrainingSample(id=..., messages=[...])
+  Incorrect: return {'id': ..., 'messages': [...]}
+  To skip a record, return None or raise PipelineError.
+```
+
 #### String formatting with JSON examples
 
 If your prompt includes JSON examples, avoid `.format()` — the braces conflict:
@@ -319,12 +350,19 @@ Pipelines run with `--limit` are marked as partial and show as stale until run w
 
 ### Worker Count
 
-The default is 50 workers, which works well with Tinker. You can override at the class level or at runtime:
+The default is 50 workers, which works well with Tinker. You can set a global
+default in `isf.yaml`:
+
+```yaml
+pipeline_workers: 100  # Global default for all pipelines
+```
+
+Or override at the class level:
 
 ```python
 class MyPipeline(Pipeline):
     name = "my-pipeline"
-    workers = 100  # Override default 50
+    workers = 100  # Override global default
 ```
 
 Or use `--workers` at runtime.

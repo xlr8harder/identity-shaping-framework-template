@@ -73,6 +73,26 @@ Then reference them by name in pipelines: `Pipeline.model_dep("judge")`. See the
 [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan)
 for a complete working example.
 
+### Pipeline Workers
+
+Pipelines run inference requests in parallel. The default is 50 concurrent
+workers, which works well with Tinker. You can set a global default in
+`isf.yaml`:
+
+```yaml
+pipeline_workers: 100  # Global default for all pipelines
+```
+
+Individual pipelines can override this by setting `workers` as a class attribute:
+
+```python
+class MyPipeline(Pipeline):
+    name = "my-pipeline"
+    workers = 20  # Override global default
+```
+
+Or pass `--workers` at runtime: `isf pipeline run my-pipeline --workers 100`
+
 ### 5. Build Registry
 
 Build sysprompts and registry from identity documents:
