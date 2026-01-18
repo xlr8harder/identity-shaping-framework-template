@@ -350,11 +350,11 @@ Pipelines run with `--limit` are marked as partial and show as stale until run w
 
 ### Worker Count
 
-The default is 50 workers, which works well with Tinker. You can set a global
-default in `isf.yaml`:
+The default is 50 workers for pipelines (20 for evals), which works well with
+Tinker. You can set a global default in `isf.yaml`:
 
 ```yaml
-pipeline_workers: 100  # Global default for all pipelines
+worker_concurrency: 50  # Global default for pipelines and evals
 ```
 
 Or override at the class level:
@@ -362,7 +362,7 @@ Or override at the class level:
 ```python
 class MyPipeline(Pipeline):
     name = "my-pipeline"
-    workers = 100  # Override global default
+    workers = 20  # Override global default
 ```
 
 Or use `--workers` at runtime.

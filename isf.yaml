@@ -6,6 +6,9 @@ identity:
   temperature: 0.7
   variants:
   - full
+
+worker_concurrency: 50        # Global default for pipelines and evals
+
 prompts:
   identity_dir: identity
   templates_dir: identity/templates

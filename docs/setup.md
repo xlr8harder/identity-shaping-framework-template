@@ -73,14 +73,14 @@ Then reference them by name in pipelines: `Pipeline.model_dep("judge")`. See the
 [Cubs Superfan example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan)
 for a complete working example.
 
-### Pipeline Workers
+### Worker Concurrency
 
-Pipelines run inference requests in parallel. The default is 50 concurrent
-workers, which works well with Tinker. You can set a global default in
+Pipelines and evals run inference requests in parallel. The default is 50
+concurrent workers for pipelines and 20 for evals. Set a global default in
 `isf.yaml`:
 
 ```yaml
-pipeline_workers: 100  # Global default for all pipelines
+worker_concurrency: 50  # Global default for pipelines and evals
 ```
 
 Individual pipelines can override this by setting `workers` as a class attribute:
