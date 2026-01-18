@@ -53,6 +53,14 @@ identity:
   - full
 ```
 
+If using Tinker for inference, list available models with:
+
+```bash
+isf tinker models              # List all models
+isf tinker models --type hybrid    # Filter by type (base/instruction/hybrid/reasoning/vision)
+isf tinker show Qwen3-32B          # Show details (partial names work if unique)
+```
+
 You can use Tinker for inference, but it is often more expensive and has a
 smaller model catalog than other providers. It is convenient if you want to use
 one API key for both inference and training.

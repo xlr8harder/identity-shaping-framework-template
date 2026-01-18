@@ -60,6 +60,11 @@ isf train data prep default    # Prepare dataset from recipe
 isf eval list              # Show available evals
 isf eval run NAME MODEL    # Run eval
 isf eval run NAME MODEL -n 20  # Limit samples
+
+# Tinker (training infrastructure)
+isf tinker models          # List available base models
+isf tinker models --type hybrid  # Filter by training type
+isf tinker show MODEL      # Show model details (partial names work)
 ```
 
 ## Python Imports

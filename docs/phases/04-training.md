@@ -36,12 +36,19 @@ Common settings:
 ## Choosing a Base Model
 
 Training requires Tinker. Your `base_model` must be a model that Tinker can
-train.
+train. List available models with:
+
+```bash
+isf tinker models              # List all available models
+isf tinker models --type hybrid    # Filter by training type
+isf tinker models --arch moe       # Filter by architecture (MoE = cost effective)
+isf tinker show Qwen3-32B          # Show details (partial names work if unique)
+```
 
 For early experiments, `Qwen/Qwen3-30B-A3B` is a strong default with a good
-cost-to-capability tradeoff. The next tier of models is much larger (roughly an
-order of magnitude more active parameters), such as Qwen3-235B, DeepSeek V3, or
-Kimi K2.
+cost-to-capability tradeoff. MoE (Mixture of Experts) models are more cost
+effective than dense models. The next tier is much larger (roughly an order of
+magnitude more active parameters), such as Qwen3-235B, DeepSeek V3, or Kimi K2.
 
 ## Preparing Training Data
 
