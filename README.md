@@ -20,7 +20,8 @@ isf pipeline --help     # Pipeline subcommands
 | Resource | Description |
 |----------|-------------|
 | [docs/setup.md](docs/setup.md) | **Start here** - project setup, configuration |
-| [docs/backend-selection.md](docs/backend-selection.md) | Choose Tinker, hosted API, or local inference backends |
+| [docs/backend-selection.md](docs/backend-selection.md) | Choose inference and training backend names |
+| [docs/backend-functionality.md](docs/backend-functionality.md) | Backend requirements, options, artifacts, and serving notes |
 | [docs/workflow.md](docs/workflow.md) | Development phases and workflow |
 | [docs/](docs/README.md) | Full documentation |
 | [Cubs Superfan Example](https://github.com/xlr8harder/identity-shaping-framework-template-example-cubsfan) | Fully developed reference template |

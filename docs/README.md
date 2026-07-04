@@ -27,7 +27,8 @@ For a complete, fully-developed reference, see the [Cubs Superfan example](https
 | Doc | Purpose |
 |-----|---------|
 | [Setup](setup.md) | Project setup, configuration, pipelines, evals |
-| [Backend Selection](backend-selection.md) | Choose Tinker, hosted API, or local inference backends |
+| [Backend Selection](backend-selection.md) | Choose inference and training backend names |
+| [Backend Functionality](backend-functionality.md) | Backend requirements, options, artifacts, and serving notes |
 | [Concepts](concepts.md) | Core distinctions: identity vs knowledge |
 | [Workflow](workflow.md) | Development phases, feedback loops |
 | [Phases](phases/) | Detailed guides for each phase |

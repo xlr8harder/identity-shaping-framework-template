@@ -17,4 +17,8 @@ lr_schedule: constant
 # Checkpointing
 save_every: 100
 
+# Backend-specific options belong under backend_options.
+# See docs/backend-functionality.md.
+backend_options: {}
+
 note: "Identity fine-tune"

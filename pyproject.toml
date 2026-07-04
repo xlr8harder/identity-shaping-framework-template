@@ -7,6 +7,11 @@ dependencies = [
     "identity-shaping-framework",
 ]
 
+[project.optional-dependencies]
+unsloth = [
+    "identity-shaping-framework[unsloth]",
+]
+
 [tool.uv.sources]
 identity-shaping-framework = { git = "https://github.com/xlr8harder/identity-shaping-framework" }
 

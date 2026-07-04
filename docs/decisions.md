@@ -82,9 +82,9 @@ provider settings and environment variables.
 - Self-managed: Modal, RunPod, cloud GPUs
 - On-prem: full control, significant ops burden
 
-`isf train run` is the stable training command. Tinker is integrated today;
-local and hosted SFT backends should land behind the same command rather than
-becoming separate external workflows.
+`isf train run` is the stable training command. Tinker and Unsloth are
+integrated today; future hosted SFT backends should land behind the same command
+rather than becoming separate external workflows.
 
 ## Decision Log
 
