@@ -88,15 +88,41 @@ OpenAI-compatible `/v1/chat/completions` endpoint.
 Use hosted API providers for data synthesis and judge models when you need a
 larger or more capable model than your local hardware can run.
 
-## Training Backend State
+## Training Backends
 
-The built-in `isf train run` command currently uses Tinker. For local LoRA or
-QLoRA SFT today, use ISF to prepare data:
+Training backend selection uses the same config style:
 
-```bash
-isf train data prep default
+```yaml
+backend: tinker
+base_model: Qwen/Qwen3-30B-A3B
+dataset: default
+epochs: 1
+batch_size: 32
+lora_rank: 32
+max_length: 8192
 ```
 
-Then train externally with a local stack such as Unsloth or Axolotl against the
-prepared JSONL. After training, serve the adapter or merged model behind an
+`backend: tinker` is integrated today. `unsloth`, `axolotl`, and `prime` are
+reserved backend names in ISF so local and hosted SFT runners can land behind
+the same `isf train run` UX.
+
+Check integration status with:
+
+```bash
+isf train backends
+```
+
+Backend-specific settings should go under `backend_options` until the runner
+promotes them to common top-level config:
+
+```yaml
+backend: unsloth
+base_model: Qwen/Qwen3-8B
+dataset: default
+backend_options:
+  quantization: qlora_4bit
+  merge_adapter: false
+```
+
+After a local runner produces an adapter or merged model, serve it behind an
 OpenAI-compatible server and register it with `provider: local`.

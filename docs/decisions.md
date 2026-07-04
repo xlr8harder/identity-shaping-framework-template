@@ -82,9 +82,9 @@ provider settings and environment variables.
 - Self-managed: Modal, RunPod, cloud GPUs
 - On-prem: full control, significant ops burden
 
-The built-in `isf train run` path currently uses Tinker. Local LoRA or QLoRA
-uses ISF-prepared data with an external trainer until a local training backend
-is added.
+`isf train run` is the stable training command. Tinker is integrated today;
+local and hosted SFT backends should land behind the same command rather than
+becoming separate external workflows.
 
 ## Decision Log
 

@@ -3,6 +3,7 @@
 # Run: isf train run default
 # See training/logs/ for experiment outputs
 
+backend: tinker
 base_model: Qwen/Qwen3-30B-A3B
 dataset: default    # references training/data/default.yaml
 

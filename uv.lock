@@ -944,7 +944,7 @@ wheels = [
 [[package]]
 name = "identity-shaping-framework"
 version = "0.1.0"
-source = { git = "https://github.com/xlr8harder/identity-shaping-framework#6174e5984f411191be40dc7ea63f69aa4c318b78" }
+source = { git = "https://github.com/xlr8harder/identity-shaping-framework#c4999c6d2d62d1e7ff82b74747be3494ee0bd5d9" }
 dependencies = [
     { name = "click" },
     { name = "dispatcher" },

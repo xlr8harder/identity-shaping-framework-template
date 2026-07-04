@@ -12,6 +12,7 @@ Create a config file in `training/configs/`:
 
 ```yaml
 # training/configs/my-experiment.yaml
+backend: tinker
 base_model: Qwen/Qwen3-30B-A3B
 dataset: default         # References training/data/default.yaml recipe
 batch_size: 32
@@ -27,6 +28,7 @@ Common settings:
 
 | Setting | Description | Typical Value |
 |---------|-------------|---------------|
+| `backend` | Training backend | `tinker` |
 | `base_model` | HuggingFace model ID | `Qwen/Qwen3-30B-A3B` |
 | `batch_size` | Samples per batch | 16-64 |
 | `lora_rank` | LoRA adapter size | 16-64 |
@@ -35,8 +37,8 @@ Common settings:
 
 ## Choosing a Base Model
 
-The built-in `isf train run` command currently uses Tinker. Your `base_model`
-must be a model that Tinker can train. List available models with:
+`backend: tinker` is integrated today. Your `base_model` must be a model that
+Tinker can train. List available models with:
 
 ```bash
 isf tinker models              # List all available models
@@ -50,10 +52,9 @@ cost-to-capability tradeoff. MoE (Mixture of Experts) models are more cost
 effective than dense models. The next tier is much larger (roughly an order of
 magnitude more active parameters), such as Qwen3-235B, DeepSeek V3, or Kimi K2.
 
-For local LoRA or QLoRA SFT, use ISF to prepare the training JSONL and then run
-an external trainer such as Unsloth or Axolotl. Serve the resulting adapter or
-merged model through an OpenAI-compatible server and register it with
-`provider: local`. See [Backend Selection](../backend-selection.md).
+For local or hosted SFT, ISF reserves backend names for `unsloth`, `axolotl`,
+and `prime` so those integrations can use the same `isf train run` command as
+they land. See [Backend Selection](../backend-selection.md).
 
 ## Preparing Training Data
 
@@ -147,6 +148,9 @@ Or use --allow-stale to proceed anyway.
 ```bash
 # Run with config (uses dataset reference from config)
 isf train run training/configs/my-experiment.yaml
+
+# Show backend integration status
+isf train backends
 
 # Or specify data file directly
 isf train run training/configs/my-experiment.yaml --data training/data/prepared/default.jsonl
