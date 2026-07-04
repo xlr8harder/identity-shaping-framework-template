@@ -50,7 +50,8 @@ See [setup.md](setup.md#data-storage) for git-lfs instructions.
 
 ### Inference Provider
 
-**Default:** Configured in `isf.yaml`, typically OpenRouter or Tinker.
+**Default:** Configured in `isf.yaml`, typically Tinker, OpenRouter, or a local
+OpenAI-compatible server.
 
 **Reconsider when:**
 - Cost becomes significant
@@ -60,11 +61,12 @@ See [setup.md](setup.md#data-storage) for git-lfs instructions.
 **Options:**
 - OpenRouter: wide model selection, pay-per-token
 - Tinker: training + inference in one place
+- Local OpenAI-compatible server: vLLM, llama.cpp, or similar via `provider: local`
 - Self-hosted: control and cost at scale
 
 ### Training Infrastructure
 
-**Default:** Tinker API for training.
+**Default:** Tinker API for managed training.
 
 **Reconsider when:**
 - Need custom training loops
@@ -73,6 +75,7 @@ See [setup.md](setup.md#data-storage) for git-lfs instructions.
 
 **Options:**
 - Tinker: managed, simple, good for most cases
+- Local LoRA or QLoRA: Unsloth or Axolotl on a CUDA workstation
 - Self-managed: Modal, RunPod, cloud GPUs
 - On-prem: full control, significant ops burden
 

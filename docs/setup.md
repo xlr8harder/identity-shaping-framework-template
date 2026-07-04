@@ -6,8 +6,8 @@ How to set up an identity-shaping project for development.
 
 - Python 3.13+
 - [uv](https://docs.astral.sh/uv/) package manager
-- [Tinker](https://thinkingmachines.ai/tinker/) access and API key (`TINKER_API_KEY`) - required for training
-- API key for an inference provider (recommended) - OpenRouter, OpenAI, etc. You can use Tinker for inference, but it's more expensive and has limited model selection.
+- [Tinker](https://thinkingmachines.ai/tinker/) access and API key (`TINKER_API_KEY`) - required for managed training
+- API key or local endpoint for an inference provider. You can use Tinker for inference, but it's more expensive and has limited model selection.
 
 ## Initial Setup
 
@@ -58,12 +58,32 @@ If using Tinker for inference, list available models with:
 ```bash
 isf tinker models              # List all models
 isf tinker models --type hybrid    # Filter by type (base/instruction/hybrid/reasoning/vision)
-isf tinker show Qwen3-32B          # Show details (partial names work if unique)
+isf tinker show Qwen3-8B           # Show details (partial names work if unique)
 ```
 
 You can use Tinker for inference, but it is often more expensive and has a
 smaller model catalog than other providers. It is convenient if you want to use
 one API key for both inference and training.
+
+For local inference, run an OpenAI-compatible server such as vLLM or llama.cpp,
+set `LOCAL_LLM_BASE_URL`, and use `provider: local`:
+
+```bash
+export LOCAL_LLM_BASE_URL="http://127.0.0.1:8000/v1"
+# Optional; only set this if your local server requires Authorization.
+export LOCAL_LLM_API_KEY="your-local-server-key"
+```
+
+```yaml
+identity:
+  prefix: myidentity
+  release_version: dev
+  provider: local
+  model: served-model-name
+  temperature: 0.7
+  variants:
+  - full
+```
 
 As you develop pipelines and evals, you may want to add additional models (e.g.,
 a judge model for fact extraction or eval scoring). Add them under `models:` in
@@ -75,6 +95,11 @@ models:
     provider: openrouter
     model: z-ai/glm-4.6
     temperature: 0.3
+
+  local_base:
+    provider: local
+    model: served-model-name
+    temperature: 0.7
 ```
 
 Then reference them by name in pipelines: `Pipeline.model_dep("judge")`. See the

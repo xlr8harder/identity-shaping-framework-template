@@ -42,7 +42,7 @@ train. List available models with:
 isf tinker models              # List all available models
 isf tinker models --type hybrid    # Filter by training type
 isf tinker models --arch moe       # Filter by architecture (MoE = cost effective)
-isf tinker show Qwen3-32B          # Show details (partial names work if unique)
+isf tinker show Qwen3-8B           # Show details (partial names work if unique)
 ```
 
 For early experiments, `Qwen/Qwen3-30B-A3B` is a strong default with a good
