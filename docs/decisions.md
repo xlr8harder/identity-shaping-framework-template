@@ -64,6 +64,9 @@ OpenAI-compatible server.
 - Local OpenAI-compatible server: vLLM, llama.cpp, or similar via `provider: local`
 - Self-hosted: control and cost at scale
 
+See [Backend Selection](backend-selection.md) for the concrete `isf.yaml`
+provider settings and environment variables.
+
 ### Training Infrastructure
 
 **Default:** Tinker API for managed training.
@@ -78,6 +81,10 @@ OpenAI-compatible server.
 - Local LoRA or QLoRA: Unsloth or Axolotl on a CUDA workstation
 - Self-managed: Modal, RunPod, cloud GPUs
 - On-prem: full control, significant ops burden
+
+The built-in `isf train run` path currently uses Tinker. Local LoRA or QLoRA
+uses ISF-prepared data with an external trainer until a local training backend
+is added.
 
 ## Decision Log
 

@@ -36,6 +36,10 @@ models:
     # No sysprompt - this is the unprompted baseline
 ```
 
+The base model can also use `provider: local` if you are serving the same base
+checkpoint locally. See [Backend Selection](../backend-selection.md) for
+provider options.
+
 Then run your eval against all three as you develop:
 
 ```bash

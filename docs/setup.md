@@ -65,8 +65,9 @@ You can use Tinker for inference, but it is often more expensive and has a
 smaller model catalog than other providers. It is convenient if you want to use
 one API key for both inference and training.
 
-For local inference, run an OpenAI-compatible server such as vLLM or llama.cpp,
-set `LOCAL_LLM_BASE_URL`, and use `provider: local`:
+For backend tradeoffs, see [Backend Selection](backend-selection.md). For local
+inference, run an OpenAI-compatible server such as vLLM or llama.cpp, set
+`LOCAL_LLM_BASE_URL`, and use `provider: local`:
 
 ```bash
 export LOCAL_LLM_BASE_URL="http://127.0.0.1:8000/v1"

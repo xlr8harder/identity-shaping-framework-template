@@ -35,8 +35,8 @@ Common settings:
 
 ## Choosing a Base Model
 
-Training requires Tinker. Your `base_model` must be a model that Tinker can
-train. List available models with:
+The built-in `isf train run` command currently uses Tinker. Your `base_model`
+must be a model that Tinker can train. List available models with:
 
 ```bash
 isf tinker models              # List all available models
@@ -49,6 +49,11 @@ For early experiments, `Qwen/Qwen3-30B-A3B` is a strong default with a good
 cost-to-capability tradeoff. MoE (Mixture of Experts) models are more cost
 effective than dense models. The next tier is much larger (roughly an order of
 magnitude more active parameters), such as Qwen3-235B, DeepSeek V3, or Kimi K2.
+
+For local LoRA or QLoRA SFT, use ISF to prepare the training JSONL and then run
+an external trainer such as Unsloth or Axolotl. Serve the resulting adapter or
+merged model through an OpenAI-compatible server and register it with
+`provider: local`. See [Backend Selection](../backend-selection.md).
 
 ## Preparing Training Data
 
