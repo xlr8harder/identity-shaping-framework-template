@@ -1043,7 +1043,7 @@ wheels = [
 [[package]]
 name = "identity-shaping-framework"
 version = "0.1.1"
-source = { git = "https://github.com/xlr8harder/identity-shaping-framework#958c64f3a7b94d8b2153a9c9b68a8e21fecb7c17" }
+source = { git = "https://github.com/xlr8harder/identity-shaping-framework#714a347b24c544724a866ca4c53bdd5f5bc26bef" }
 dependencies = [
     { name = "click" },
     { name = "dispatcher" },
@@ -1394,8 +1394,8 @@ wheels = [
 
 [[package]]
 name = "llm-client"
-version = "0.1.28"
-source = { git = "https://github.com/xlr8harder/llm_client.git#48bf3cd61f66465414b5532cc5c026f8d40f1a27" }
+version = "0.1.29"
+source = { git = "https://github.com/xlr8harder/llm_client.git#538f019fc3ec0931799965b0aa5e3465299ff940" }
 dependencies = [
     { name = "pytest" },
     { name = "requests" },

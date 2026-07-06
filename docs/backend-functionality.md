@@ -121,11 +121,12 @@ Optional registry metadata can be recorded with the training run:
 backend_options:
   registry:
     provider: local
-    model: served-model-name
+    model: 127.0.0.1:8000/served-model-name
 ```
 
-After the server is running and `LOCAL_LLM_BASE_URL` is set, `isf registry build`
-can add that served model name to the registry.
+After the server is running, `isf registry build` can add that served model name
+to the registry. You may also use `model: served-model-name` with
+`LOCAL_LLM_BASE_URL` instead of encoding the endpoint in the model string.
 
 ## Local Inference
 
@@ -140,6 +141,19 @@ export LOCAL_LLM_API_KEY="your-local-server-key"
 The `model` field in `isf.yaml` must match the name exposed by the local server.
 For vLLM that is usually the served model name; for llama.cpp it is the alias
 you configured when starting the server.
+
+If you do not want to rely on `LOCAL_LLM_BASE_URL`, encode the endpoint directly:
+
+```yaml
+models:
+  local_base:
+    provider: local
+    model: 127.0.0.1:8000/Qwen/Qwen3-8B
+```
+
+That calls `http://127.0.0.1:8000/v1/chat/completions` and sends
+`Qwen/Qwen3-8B` as the OpenAI `model` value. Full base URLs use `::` to avoid
+ambiguity, for example `http://127.0.0.1:8000/custom/v1::served-model-name`.
 
 ## Reserved Backends
 

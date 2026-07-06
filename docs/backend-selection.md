@@ -19,7 +19,9 @@ Keep this page high level. Backend-specific behavior and options live in
 
 `local` is not a separate ISF HTTP implementation. ISF routes it through
 `llm_client`, so it uses the same model registry shape and retry behavior as the
-other OpenAI-compatible providers.
+other OpenAI-compatible providers. Local endpoints can be configured with
+`LOCAL_LLM_BASE_URL` or encoded directly in the model string; see
+[Backend Functionality](backend-functionality.md#local-inference).
 
 ```yaml
 identity:

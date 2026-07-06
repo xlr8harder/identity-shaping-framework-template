@@ -68,7 +68,8 @@ one API key for both inference and training.
 For backend choices, see [Backend Selection](backend-selection.md). For backend
 requirements and options, see [Backend Functionality](backend-functionality.md).
 For local inference, run an OpenAI-compatible server such as vLLM or llama.cpp,
-set `LOCAL_LLM_BASE_URL`, and use `provider: local`:
+then use `provider: local`. You can set the endpoint once with
+`LOCAL_LLM_BASE_URL`:
 
 ```bash
 export LOCAL_LLM_BASE_URL="http://127.0.0.1:8000/v1"
@@ -87,6 +88,19 @@ identity:
   - full
 ```
 
+Or put the endpoint directly in the model string:
+
+```yaml
+identity:
+  prefix: myidentity
+  release_version: dev
+  provider: local
+  model: 127.0.0.1:8000/served-model-name
+  temperature: 0.7
+  variants:
+  - full
+```
+
 As you develop pipelines and evals, you may want to add additional models (e.g.,
 a judge model for fact extraction or eval scoring). Add them under `models:` in
 `isf.yaml`:
@@ -100,7 +114,7 @@ models:
 
   local_base:
     provider: local
-    model: served-model-name
+    model: 127.0.0.1:8000/served-model-name
     temperature: 0.7
 ```
 
