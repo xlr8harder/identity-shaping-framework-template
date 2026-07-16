@@ -2,6 +2,37 @@
 
 This is a template for the [Identity Shaping Framework](https://github.com/xlr8harder/identity-shaping-framework) (`isf`), an agent-first tool for developing AI identities through prompting, evaluation, and fine-tuning.
 
+Coding agents are the primary users of this template. The repository structure,
+CLI, and documentation are designed so an agent can investigate the project,
+propose a grounded path forward, and carry the work through prompting,
+evaluation, data generation, and training with human direction.
+
+## Start with an Agent
+
+Clone the template, start your coding agent in the repository, and give it an
+initial prompt. You do not need to learn every ISF command before beginning.
+
+```bash
+git clone <your-template-repository-url> my-identity
+cd my-identity
+# Start your preferred coding agent here.
+```
+
+Suggested initial prompt:
+
+> Investigate this repository and the Identity Shaping Framework before making
+> changes. Read the agent guide and project documentation, inspect the current
+> identity seed and configuration, and check the available CLI commands. Then
+> explain the current project state, identify the decisions and credentials
+> needed to proceed, and propose the first concrete identity-development step.
+> Do not start paid inference, generate a large dataset, or begin training until
+> you have shown me the plan and validated the relevant inputs.
+
+After that orientation, describe the identity you want to develop, provide any
+source material or constraints, and work with the agent through the documented
+phases. The agent should use CLI help and repository files as its source of
+truth rather than expecting you to translate the framework manually.
+
 ## Orientation
 
 **What is this?** A structured template for creating a custom AI identity. You define who the model is, generate training data, and fine-tune a model to embody that identity.
@@ -19,7 +50,7 @@ isf pipeline --help     # Pipeline subcommands
 
 | Resource | Description |
 |----------|-------------|
-| [docs/setup.md](docs/setup.md) | **Start here** - project setup, configuration |
+| [docs/setup.md](docs/setup.md) | Agent-first project setup and configuration |
 | [docs/backend-selection.md](docs/backend-selection.md) | Choose inference and training backend names |
 | [docs/backend-functionality.md](docs/backend-functionality.md) | Backend requirements, options, artifacts, and serving notes |
 | [docs/workflow.md](docs/workflow.md) | Development phases and workflow |

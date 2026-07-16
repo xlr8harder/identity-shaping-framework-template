@@ -2,6 +2,24 @@
 
 How to set up an identity-shaping project for development.
 
+## Agent-First Setup
+
+This template is intended to be operated primarily by a coding agent under
+human direction. After cloning the repository, start your agent in the project
+root and ask it to investigate before making changes:
+
+> Investigate this repository and the Identity Shaping Framework before making
+> changes. Read `AGENTS.md`, `docs/README.md`, and the current identity and
+> configuration files. Inspect the available `isf` CLI help, report the project
+> state and missing prerequisites, and propose the first concrete step. Do not
+> run paid inference, large data-generation jobs, or training until the inputs
+> and plan have been reviewed.
+
+The remaining setup steps are written as reproducible commands for both the
+agent and human operator. Let the agent inspect and execute them, while you
+provide identity goals, credentials, constraints, and judgment at decision
+points.
+
 ## Prerequisites
 
 - Python 3.13+

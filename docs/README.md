@@ -4,9 +4,15 @@ This guide teaches you how to develop an identity-shaped AI from seed to trained
 
 ## What This Framework Is For
 
-A coding agent can take this template, start with a simple seed, and produce a trained model end-to-end. That's useful as a demonstration, but it's more of a toy example than a practical workflow.
+A coding agent is the primary interface to this template. It can investigate a
+simple seed, navigate the documented phases, operate the CLI, and carry a
+project through prompting, evaluation, data generation, and training.
 
-The real value is that **all the pieces work and are navigable by a coding agent**. The CLI has consistent patterns. The file structure is predictable. The phases build on each other. This means a human and an agent working together can be highly productive: experimenting with different identity approaches, iterating on prompts, adjusting data synthesis, and evaluating results - all without getting stuck on tooling.
+The framework is structured so **all the pieces work and are navigable by a
+coding agent**. The CLI has consistent patterns, the file structure is
+predictable, and each phase produces inspectable artifacts for the next. Human
+direction remains essential for identity goals, source selection, review, and
+decisions about expensive inference or training.
 
 The framework provides structure, agents navigate it reliably, and human judgment steers. Rapid experimentation becomes possible.
 
